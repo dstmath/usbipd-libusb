@@ -3,11 +3,19 @@ project(usbip_libusb C)
 
 set(CMAKE_C_STANDARD 11)
 
-find_path(LIBUSB_INCLUDE_DIR NAMES libusb.h PATH_SUFFIXES "include" "libusb" "libusb-1.0")
-find_library(LIBUSB_LIBRARY NAMES usb-1.0 PATH_SUFFIXES "lib" "lib32" "lib64")
-if(NOT LIBUSB_INCLUDE_DIR OR NOT LIBUSB_LIBRARY)
-    error("libusb not found")
-endif()
+#find_path(LIBUSB_INCLUDE_DIR NAMES libusb.h PATH_SUFFIXES "include" "libusb" "libusb-1.0")
+#find_library(LIBUSB_LIBRARY NAMES usb-1.0 PATH_SUFFIXES "lib" "lib32" "lib64")
+#if(NOT LIBUSB_INCLUDE_DIR OR NOT LIBUSB_LIBRARY)
+#    error("libusb not found")
+#endif()
+
+# libusb
+set(CMAKE_BUILD_TYPE Debug)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+include_directories(${CMAKE_SOURCE_DIR}/third/libusb/libusb)
+add_subdirectory(third)
 
 include_directories(include libsrc)
 
@@ -32,4 +40,5 @@ add_executable(${PROJECT_NAME}
         driver-libusb/stub_rx.c
         driver-libusb/stub_tx.c include/usbip_host_driver.h include/usbip_debug.h src/usbip_debug.c)
 target_include_directories(${PROJECT_NAME} PRIVATE ${LIBUSB_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBUSB_LIBRARY} pthread)
+#target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBUSB_LIBRARY} pthread)
+target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads usb-1.0)
