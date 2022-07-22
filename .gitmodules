@@ -1,0 +1,3 @@
+[submodule "third/libusb"]
+	path = third/libusb
+	url = git@github.com:libusb/libusb.git
